@@ -2,6 +2,7 @@ package relayer
 
 import (
 	"context"
+	"crypto/rand"
 	swisstronik_go_sdk "github.com/SigmaGmbH/swisstronik-go-sdk"
 	"math/big"
 
@@ -201,9 +202,11 @@ func (c *Service) processIdentityStateTransfer(ctx context.Context, chain *confi
 			return "", errors.Wrap(err, "failed to encode tx.data")
 		}
 
-		nodePublicKey, _ := hexutil.Decode("0xed70e238e396cba793d05106d45e9080bd86e592d5993972fa9a8dbdf44afb2c")
+		var userPrivateKey [32]byte
+		rand.Read(userPrivateKey[:])
+
 		dataToEncrypt := signedTx.Data()
-		encryptedData, err := swisstronik_go_sdk.EncryptECDH(nodePublicKey, nodePublicKey, dataToEncrypt)
+		encryptedData, err := swisstronik_go_sdk.EncryptECDHWithRPCURL(userPrivateKey[:], chain.RPCURL, dataToEncrypt)
 		if err != nil {
 			return "", errors.Wrap(err, "failed to encrypt tx.data")
 		}
@@ -283,9 +286,11 @@ func (c *Service) processIdentityGISTTransfer(ctx context.Context, chain *config
 			return "", errors.Wrap(err, "failed to encode tx.data")
 		}
 
-		nodePublicKey, _ := hexutil.Decode("0xed70e238e396cba793d05106d45e9080bd86e592d5993972fa9a8dbdf44afb2c")
+		var userPrivateKey [32]byte
+		rand.Read(userPrivateKey[:])
+
 		dataToEncrypt := signedTx.Data()
-		encryptedData, err := swisstronik_go_sdk.EncryptECDH(nodePublicKey, nodePublicKey, dataToEncrypt)
+		encryptedData, err := swisstronik_go_sdk.EncryptECDHWithRPCURL(userPrivateKey[:], chain.RPCURL, dataToEncrypt)
 		if err != nil {
 			return "", errors.Wrap(err, "failed to encrypt tx.data")
 		}
