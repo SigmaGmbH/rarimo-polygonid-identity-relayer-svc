@@ -1,9 +1,9 @@
-FROM golang:1.19-alpine as buildbase
+FROM golang:1.22-alpine as buildbase
 
 RUN apk add git build-base
 
 WORKDIR /go/src/github.com/rarimo/identity-relayer-svc
-COPY vendor .
+#COPY vendor .
 COPY . .
 
 ENV GO111MODULE="on"
@@ -13,7 +13,7 @@ ENV GOOS="linux"
 RUN GOOS=linux go build  -o /usr/local/bin/relayer-svc /go/src/github.com/rarimo/identity-relayer-svc
 
 
-FROM alpine:3.9
+FROM alpine:3.19
 
 COPY --from=buildbase /usr/local/bin/relayer-svc /usr/local/bin/relayer-svc
 RUN apk add --no-cache ca-certificates

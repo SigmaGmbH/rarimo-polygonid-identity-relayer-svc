@@ -1,28 +1,30 @@
 log:
-  level: info
+  level: debug
   disable_sentry: true
 
 listener:
   addr: :8000
 
 db:
-  url: "postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable"
+  url: "postgres://relayer:relayer@localhost:5432/relayer?sslmode=disable"
 
 core:
-  addr: tcp://127.0.0.1:26657
+  addr: https://rpc.node1.mainnet-beta.rarimo.com:443
 
 cosmos:
-  addr: 127.0.0.1:9090
-  enable_tls: false
+  addr: core-api.node1.mainnet-beta.rarimo.com:443
+  enable_tls: true
+
 
 evm:
   chains:
-    - name: "Goerli"
-      bridge_address: "0x5A18Bf59748818CF47a1B709b65Dbbd4dA51Ba57"
-      submitter_private_key: "2985033f9d4120e351d087b97257ea7eeeec58c729f59f49c3d73c536f0a50bb"
-      rpc: https://goerli.infura.io/v3/2a6a01d5162c45939a09d96bea88d358
+    - name: "Swisstronik"
+      contract_address: "0xC82C9ac7B1A1c58957e39987Ad37332C3b9C1299"
+      submitter_private_key: ""
+      rpc: https://json-rpc.testnet.swisstronik.com
+      chain_id: 1291
 
 relay:
-  catchup_disabled: true
+  catchup_disabled: false
   issuer_id: [ '', '' ]
   disable_filtration: true

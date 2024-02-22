@@ -2,6 +2,7 @@ package relayer
 
 import (
 	"context"
+	swisstronik_go_sdk "github.com/SigmaGmbH/swisstronik-go-sdk"
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -190,7 +191,29 @@ func (c *Service) processIdentityStateTransfer(ctx context.Context, chain *confi
 
 	prevState := new(big.Int).SetBytes(hexutil.MustDecode(details.Operation.ReplacedStateHash))
 
-	tx, err := contract.SignedTransitStateData(opts, prevState, stateInfo, details.Proof)
+	var tx *types.Transaction
+	if chain.ChainID.Int64() == 1291 {
+		c.log.Debug("Sending encrypted tx: SignedTransitStateData")
+		opts.NoSend = true
+		opts.GasLimit = 1_000_000
+		signedTx, err := contract.SignedTransitStateData(opts, prevState, stateInfo, details.Proof)
+		if err != nil {
+			return "", errors.Wrap(err, "failed to encode tx.data")
+		}
+
+		nodePublicKey, _ := hexutil.Decode("0xed70e238e396cba793d05106d45e9080bd86e592d5993972fa9a8dbdf44afb2c")
+		dataToEncrypt := signedTx.Data()
+		encryptedData, err := swisstronik_go_sdk.EncryptECDH(nodePublicKey, nodePublicKey, dataToEncrypt)
+		if err != nil {
+			return "", errors.Wrap(err, "failed to encrypt tx.data")
+		}
+
+		opts.NoSend = false
+		tx, err = contract.Contract.RawTransact(opts, encryptedData)
+	} else {
+		tx, err = contract.SignedTransitStateData(opts, prevState, stateInfo, details.Proof)
+	}
+
 	if err != nil {
 		c.log.Debugf(
 			"Tx args: %s, %v, %s",
@@ -250,7 +273,28 @@ func (c *Service) processIdentityGISTTransfer(ctx context.Context, chain *config
 
 	prevGist := new(big.Int).SetBytes(hexutil.MustDecode(details.Operation.ReplacedGISTHash))
 
-	tx, err := contract.SignedTransitGISTData(opts, prevGist, gistInfo, details.Proof)
+	var tx *types.Transaction
+	if chain.ChainID.Int64() == 1291 {
+		c.log.Debug("Sending encrypted tx: SignedTransitGISTData")
+		opts.NoSend = true
+		opts.GasLimit = 1_000_000
+		signedTx, err := contract.SignedTransitGISTData(opts, prevGist, gistInfo, details.Proof)
+		if err != nil {
+			return "", errors.Wrap(err, "failed to encode tx.data")
+		}
+
+		nodePublicKey, _ := hexutil.Decode("0xed70e238e396cba793d05106d45e9080bd86e592d5993972fa9a8dbdf44afb2c")
+		dataToEncrypt := signedTx.Data()
+		encryptedData, err := swisstronik_go_sdk.EncryptECDH(nodePublicKey, nodePublicKey, dataToEncrypt)
+		if err != nil {
+			return "", errors.Wrap(err, "failed to encrypt tx.data")
+		}
+
+		opts.NoSend = false
+		tx, err = contract.Contract.RawTransact(opts, encryptedData)
+	} else {
+		tx, err = contract.SignedTransitGISTData(opts, prevGist, gistInfo, details.Proof)
+	}
 	if err != nil {
 		c.log.Debugf(
 			"Tx args: %s, %v, %s",

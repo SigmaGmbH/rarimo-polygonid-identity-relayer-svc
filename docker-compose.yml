@@ -1,0 +1,33 @@
+version: "3.7"
+
+services:
+  relayer-db:
+    image: postgres:13
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=relayer
+      - POSTGRES_PASSWORD=relayer
+      - POSTGRES_DB=relayer
+      - PGDATA=/pgdata
+    volumes:
+      - relayer-data:/pgdata
+    ports:
+      - "5432:5432"
+
+  relayer:
+    build:
+      context: .
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    depends_on:
+      - relayer-db
+    volumes:
+      - ./config/relayer.yaml:/config.yaml
+    environment:
+      - KV_VIPER_FILE=/config.yaml
+    entrypoint: sh -c "relayer-svc migrate up && relayer-svc run all"
+
+
+volumes:
+  relayer-data:

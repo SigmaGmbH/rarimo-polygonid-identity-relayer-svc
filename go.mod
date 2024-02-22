@@ -1,6 +1,6 @@
 module github.com/rarimo/identity-relayer-svc
 
-go 1.19
+go 1.22
 
 require (
 	github.com/alecthomas/kingpin v2.2.6+incompatible
@@ -19,6 +19,7 @@ require (
 )
 
 require (
+	github.com/SigmaGmbH/swisstronik-go-sdk v0.0.0-20240129200839-90ba139bcaac
 	github.com/ava-labs/subnet-evm v0.2.4
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.1
 	github.com/rarimo/go-merkle v0.0.0-20231004122345-36fa49031c66
@@ -100,6 +101,7 @@ require (
 	github.com/mimoo/StrobeGo v0.0.0-20210601165009-122bf33a46e0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/mtibben/percent v0.2.1 // indirect
+	github.com/oasisprotocol/deoxysii v0.0.0-20220228165953-2091330c22b7 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.8 // indirect
 	github.com/petermattis/goid v0.0.0-20180202154549-b0b1615b78e5 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
@@ -131,10 +133,10 @@ require (
 	github.com/zondax/ledger-go v0.14.1 // indirect
 	gitlab.com/distributed_lab/figure v2.1.0+incompatible // indirect
 	go.etcd.io/bbolt v1.3.6 // indirect
-	golang.org/x/crypto v0.14.0 // indirect
+	golang.org/x/crypto v0.19.0 // indirect
 	golang.org/x/net v0.17.0 // indirect
-	golang.org/x/sys v0.13.0 // indirect
-	golang.org/x/term v0.13.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
+	golang.org/x/term v0.17.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/genproto v0.0.0-20231030173426-d783a09b4405 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231030173426-d783a09b4405 // indirect
