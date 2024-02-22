@@ -1,4 +1,4 @@
-# identity-relayer-svc
+# Swisstronik Rarimo PolygonID Relayer SVC
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -11,6 +11,9 @@ configured EVM chain by request.
 
 For more information about how the PolygonID identity transfer works
 visit: [rarimo-core docs](https://rarimo.github.io/rarimo-core/docs/common/bridging/002-identity.html).
+
+For more information about Swisstronik visit: 
+[Swisstronik website](https://swisstronik.com)
 
 ----
 
@@ -84,40 +87,6 @@ relay:
 
 Use the `relayer-svc migrate up && relayer-svc run all` command to perform database migrations and run the service.
 
-Explore the simple docker-compose file to run described services:
-
-```yaml
-version: "3.7"
-
-services:
-  relayer-db:
-    image: postgres:13
-    restart: unless-stopped
-    environment:
-      - POSTGRES_USER=relayer
-      - POSTGRES_PASSWORD=relayer
-      - POSTGRES_DB=relayer
-      - PGDATA=/pgdata
-    volumes:
-      - relayer-data:/pgdata
-
-  relayer:
-    image: path/to/image:hash
-    restart: on-failure
-    ports:
-      - "8000:8000"
-    depends_on:
-      - relayer-db
-    volumes:
-      - ./config/relayer.yaml:/config.yaml
-    environment:
-      - KV_VIPER_FILE=/config.yaml
-    entrypoint: sh -c "relayer-svc migrate up && relayer-svc run all"
-
-
-volumes:
-  relayer-data:
-```
 
 ----
 
