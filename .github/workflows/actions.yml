@@ -2,6 +2,9 @@ name: Build Rarimo Identity Relayer service docker image
 on:
   workflow_dispatch:
 
+permissions:
+  packages: write
+
 jobs:
   converge:
     name: Converge
